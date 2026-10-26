@@ -1,0 +1,43 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <group android:scaleX="0.75"
+      android:scaleY="0.75"
+      android:translateX="64"
+      android:translateY="64">
+    <group>
+      <clip-path
+          android:pathData="M0,0h512v512h-512z"/>
+      <path
+          android:pathData="M0,0h512v512h-512z"
+          android:fillColor="#0D1A3B"/>
+      <path
+          android:pathData="M154.56,58.22C173.47,76.57 59.62,125.72 0.34,148L-32,-59H98.59C83.13,-48.06 221.97,-32.35 335.81,-22.49C367.97,-24.18 404.19,-23.24 444.36,-18.6C525.85,-9.18 441.64,-13.31 335.81,-22.49C198.7,-15.28 135.42,39.63 154.56,58.22Z"
+          android:fillColor="#13224B"/>
+      <path
+          android:pathData="M358.44,441.78C339.53,423.43 453.38,374.28 512.66,352L545,559H414.41C429.88,548.06 291.03,532.35 177.19,522.49C145.03,524.18 108.81,523.24 68.64,518.6C-12.85,509.18 71.36,513.31 177.19,522.49C314.3,515.28 377.58,460.37 358.44,441.78Z"
+          android:fillColor="#13224B"/>
+      <path
+          android:pathData="M377.21,249.03L272.74,185.2C259.41,177.06 244.54,193.14 253.71,205.79C260.55,215.24 253.8,228.47 242.13,228.47H164.99C119.64,228.47 101.37,286.94 138.64,312.76C146.38,318.13 155.57,321 164.99,321H356.97C396.19,321 410.68,269.48 377.21,249.03Z"
+          android:strokeWidth="60"
+          android:fillColor="#00000000"
+          android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+          <gradient
+              android:startX="102.68"
+              android:startY="-74.24"
+              android:endX="514"
+              android:endY="601.5"
+              android:type="linear">
+            <item android:offset="0" android:color="#FFD0EAFB"/>
+            <item android:offset="0.6" android:color="#FF0833B8"/>
+            <item android:offset="1" android:color="#FF185CFA"/>
+          </gradient>
+        </aapt:attr>
+      </path>
+    </group>
+  </group>
+</vector>
