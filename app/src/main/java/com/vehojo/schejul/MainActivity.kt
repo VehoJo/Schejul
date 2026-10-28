@@ -1,5 +1,6 @@
 package com.vehojo.schejul
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.vehojo.schejul.ui.components.Footer
 import com.vehojo.schejul.ui.components.Header
 import com.vehojo.schejul.ui.screens.HomeScreen
 import com.vehojo.schejul.ui.theme.SchejulTheme
@@ -29,8 +29,10 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun Main() {
-    Column() {
-        HomeScreen()
+    SchejulTheme {
+        Column() {
+            HomeScreen()
+        }
     }
 }
 
