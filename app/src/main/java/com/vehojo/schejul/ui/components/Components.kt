@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,12 +51,13 @@ fun Header() {
     val currentDate = remember { LocalDate.now() }
     val beautifulDate = remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
     val useDate = currentDate.format(beautifulDate)
+
     Row(verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .statusBarsPadding()
-            .padding(start = 20.dp, end = 30.dp, top = 10.dp)) {
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp)) {
         Icon(
             painter = painterResource(id = R.drawable.avatar_schejul_monochrome),
             tint = MaterialTheme.colorScheme.tertiary,
@@ -97,7 +100,11 @@ fun Header() {
 fun NavBar(
     homeColor: Color,
     newColor: Color,
-    settingsColor: Color
+    settingsColor: Color,
+    homeFW: FontWeight,
+    newFW: FontWeight,
+    settingsFW: FontWeight
+
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -122,7 +129,7 @@ fun NavBar(
                 text = "Главная",
                 fontSize = 12.sp,
                 fontFamily = Roboto,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = homeFW,
                 color = homeColor,
             )
         }
@@ -140,7 +147,7 @@ fun NavBar(
             Text(
                 text = "Добавить",
                 fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
+                fontWeight = newFW,
                 fontSize = 12.sp,
                 color = newColor,
             )
@@ -159,7 +166,7 @@ fun NavBar(
             Text(
                 text = "Настройки",
                 fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
+                fontWeight = settingsFW,
                 fontSize = 12.sp,
                 color = settingsColor,
             )
@@ -177,54 +184,66 @@ fun LessonBox(
     nameLesson: String,
     classroomNum: String,
     lessonNum: String,
+    boxCol: Color
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically,
+    Box(contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(start = 25.dp, end = 25.dp)
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxWidth()
-    ) {
-        Column() {
+            .padding(horizontal = 16.dp)
+            .height(55.dp)
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp)
+                .fillMaxWidth()
+        ) {
+            Column() {
+                Text(
+                    text = startTime,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = endTime,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            Spacer(modifier = Modifier.width(20.dp))
+            Box(
+                modifier = Modifier
+                    .size(width = 3.dp, height = 30.dp)
+                    .background(color = boxCol, shape = RoundedCornerShape(2.dp)))
+            Spacer(modifier = Modifier.width(10.dp))
+            Column() {
+                Text(
+                    text = nameLesson,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = classroomNum,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = startTime,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = endTime,
+                text = lessonNum,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.secondary
             )
         }
-        Spacer(modifier = Modifier.width(32.dp))
-        Column() {
-            Text(
-                text = nameLesson,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = classroomNum,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = lessonNum,
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Normal,
-            fontSize = 11.sp,
-            color = MaterialTheme.colorScheme.secondary
-        )
     }
 }
 
@@ -238,6 +257,7 @@ fun LessonBoxPreview() {
             nameLesson = "История",
             classroomNum = "Кабинет 13",
             lessonNum = "1",
+            boxCol = MaterialTheme.colorScheme.tertiary
         )
     }
 }
@@ -249,7 +269,10 @@ fun NavBarPreview() {
         NavBar(
             homeColor = MaterialTheme.colorScheme.tertiary,
             newColor = MaterialTheme.colorScheme.secondary,
-            settingsColor = MaterialTheme.colorScheme.secondary
+            settingsColor = MaterialTheme.colorScheme.secondary,
+            homeFW = FontWeight.SemiBold,
+            newFW = FontWeight.Normal,
+            settingsFW = FontWeight.Normal
         )
     }
 }

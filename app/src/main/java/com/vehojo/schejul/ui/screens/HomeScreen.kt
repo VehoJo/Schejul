@@ -43,29 +43,33 @@ import com.vehojo.schejul.ui.theme.Secondary
 @Composable
 fun HomeScreen() {
     SchejulTheme {
-        Box(modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()) {
-            Column() {
-                Header()
-                NextLesson()
-                Spacer(modifier = Modifier.height(25.dp))
-                LessonBox(
-                    startTime = "08:00",
-                    endTime = "08:40",
-                    nameLesson = "История",
-                    classroomNum = "Кабинет 13",
-                    lessonNum = "1",
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                AddLesson()
-                Spacer(modifier = Modifier.height(15.dp))
-                NavBar(
-                    homeColor = MaterialTheme.colorScheme.tertiary,
-                    newColor = MaterialTheme.colorScheme.secondary,
-                    settingsColor = MaterialTheme.colorScheme.secondary
-                )
-            }
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+        ) {
+            Header()
+            NextLesson()
+            Spacer(modifier = Modifier.height(25.dp))
+            LessonBox(
+                startTime = "08:00",
+                endTime = "08:40",
+                nameLesson = "История",
+                classroomNum = "Кабинет 13",
+                lessonNum = "1",
+                boxCol = MaterialTheme.colorScheme.onSurface
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            AddLessonBut()
+            Spacer(modifier = Modifier.height(15.dp))
+            NavBar(
+                homeColor = MaterialTheme.colorScheme.tertiary,
+                newColor = MaterialTheme.colorScheme.secondary,
+                settingsColor = MaterialTheme.colorScheme.secondary,
+                homeFW = FontWeight.SemiBold,
+                newFW = FontWeight.Normal,
+                settingsFW = FontWeight.Normal
+            )
         }
     }
 }
@@ -73,71 +77,80 @@ fun HomeScreen() {
 @Preview(showBackground = true)
 @Composable
 fun NextLesson() {
+    Spacer(modifier = Modifier.height(25.dp))
     Column(
         modifier = Modifier
+            .padding(horizontal = 15.dp)
             .fillMaxWidth()
-            .padding(start = 35.dp, end = 35.dp)
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(24.dp))
     ) {
-        Spacer(modifier = Modifier.height(45.dp))
-        Row() {
-            Text(
-                text = "Следующий урок".uppercase(),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 11.sp,
-                color = MaterialTheme.colorScheme.secondary
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "1-й урок · 08:00-08:40",
-                fontFamily = Roboto,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
-        Spacer(modifier = Modifier.height(7.dp))
-        Text(
-            text = "История",
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_map),
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(20.dp),
-                contentDescription = "Map"
-            )
-            Spacer(modifier = Modifier.width(5.dp))
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.height(18.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Следующий урок".uppercase(),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "1-й урок · 08:00-08:40",
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
+            Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = "История",
                 fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.secondary
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                painter = painterResource(id = R.drawable.icon_time),
-                tint = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.size(20.dp),
-                contentDescription = "Clock"
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = "Через 32 минуты",
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.secondary
-            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_map),
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "Map"
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = "История",
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_time),
+                    tint = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "Clock"
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = "Через 32 минуты",
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            Spacer(modifier = Modifier.height(18.dp))
         }
     }
-    Spacer(modifier = Modifier.height(40.dp))
+    Spacer(modifier = Modifier.height(12.dp))
     Row(verticalAlignment = Alignment.CenterVertically) {
         Spacer(modifier = Modifier.width(15.dp))
         Text(
@@ -161,7 +174,7 @@ fun NextLesson() {
 
 @Preview(showBackground = true)
 @Composable
-fun AddLesson() {
+fun AddLessonBut() {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -170,7 +183,7 @@ fun AddLesson() {
             .height(50.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(100.dp))
-            .background(Blue)
+            .background(MaterialTheme.colorScheme.tertiary)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
