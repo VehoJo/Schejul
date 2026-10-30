@@ -5,33 +5,32 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import android.app.TimePickerDialog
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,7 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vehojo.schejul.R
-import com.vehojo.schejul.ui.components.Header
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
 
@@ -103,6 +100,74 @@ fun AddLesson() {
         }
         Spacer(modifier = Modifier.height(17.5.dp))
         Text(
+            text = "Номер урока",
+            fontFamily = Roboto,
+            fontWeight = FontWeight.Medium,
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.secondary
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        var expanded by remember { mutableStateOf(false) }
+        var selectedNum by remember { mutableStateOf("1") }
+
+        val numbers = (1..10).map { it.toString() }
+
+        Column {
+            Box {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .border(
+                            1.dp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            RoundedCornerShape(12.dp)
+                        )
+                        .clickable{expanded = !expanded}
+                        .padding(horizontal = 15.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = selectedNum,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.secondary
+                    ) }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(12.dp)),
+                    shape = RoundedCornerShape(12.dp),
+                    containerColor = MaterialTheme.colorScheme.background,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)
+                ) {
+                    numbers.forEach { number ->
+                        DropdownMenuItem(
+                            text = { Text(
+                                text = number,
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.secondary
+                            )},
+                            onClick = {
+                                selectedNum = number
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(
             text = "Предмет",
             fontFamily = Roboto,
             fontWeight = FontWeight.Medium,
@@ -116,7 +181,7 @@ fun AddLesson() {
             onValueChange = { subject = it },
             shape = RoundedCornerShape(12.dp),
             placeholder = { Text("Название предмета") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                 focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -129,7 +194,9 @@ fun AddLesson() {
                 unfocusedContainerColor = MaterialTheme.colorScheme.background
             )
         )
+
         Spacer(modifier = Modifier.height(20.dp))
+
         Row {
             Column {
                 Text(
@@ -169,7 +236,7 @@ fun AddLesson() {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     shape = RoundedCornerShape(12.dp),
                     placeholder = { Text("ЧЧ:ММ") },
-                    modifier = Modifier.width(170.dp),
+                    modifier = Modifier.width(170.dp).height(56.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -242,7 +309,7 @@ fun AddLesson() {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     shape = RoundedCornerShape(12.dp),
                     placeholder = { Text("ЧЧ:ММ") },
-                    modifier = Modifier.width(170.dp),
+                    modifier = Modifier.width(170.dp).height(56.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -277,7 +344,9 @@ fun AddLesson() {
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Кабинет (необязательно)",
             fontFamily = Roboto,
@@ -293,7 +362,7 @@ fun AddLesson() {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             shape = RoundedCornerShape(12.dp),
             placeholder = { Text("Номер кабинета") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                 focusedBorderColor = MaterialTheme.colorScheme.tertiary,
@@ -306,15 +375,44 @@ fun AddLesson() {
                 unfocusedContainerColor = MaterialTheme.colorScheme.background
             )
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "Номер урока",
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.secondary
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-
+        Spacer(modifier = Modifier.weight(1f))
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.surface
+            ),
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Сохранить урок",
+                fontFamily = Roboto,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.tertiary
+            ),
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Отмена",
+                fontFamily = Roboto,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp
+            )
+        }
+        Spacer(modifier = Modifier.navigationBarsPadding().height(20.dp))
     }
 }
+
+

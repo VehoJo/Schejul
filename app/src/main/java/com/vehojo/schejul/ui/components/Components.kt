@@ -7,19 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,11 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vehojo.schejul.R
-import com.vehojo.schejul.ui.theme.Blue
-import com.vehojo.schejul.ui.theme.Primary
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
-import com.vehojo.schejul.ui.theme.Secondary
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -103,9 +94,7 @@ fun NavBar(
     settingsColor: Color,
     homeFW: FontWeight,
     newFW: FontWeight,
-    settingsFW: FontWeight
-
-) {
+    settingsFW: FontWeight) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -114,7 +103,6 @@ fun NavBar(
             .fillMaxWidth()
             .height(80.dp)
     ) {
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.clickable {}
@@ -188,7 +176,7 @@ fun LessonBox(
 ) {
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 15.dp)
             .height(55.dp)
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))) {
         Row(

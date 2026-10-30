@@ -1,9 +1,6 @@
 package com.vehojo.schejul.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,34 +9,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.vehojo.schejul.R
 import com.vehojo.schejul.ui.components.Header
 import com.vehojo.schejul.ui.components.LessonBox
 import com.vehojo.schejul.ui.components.NavBar
-import com.vehojo.schejul.ui.theme.Blue
-import com.vehojo.schejul.ui.theme.Primary
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
-import com.vehojo.schejul.ui.theme.Secondary
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun HomeScreen() {
     SchejulTheme {
@@ -50,7 +43,7 @@ fun HomeScreen() {
         ) {
             Header()
             NextLesson()
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             LessonBox(
                 startTime = "08:00",
                 endTime = "08:40",
@@ -150,7 +143,7 @@ fun NextLesson() {
             Spacer(modifier = Modifier.height(18.dp))
         }
     }
-    Spacer(modifier = Modifier.height(12.dp))
+    Spacer(modifier = Modifier.height(25.dp))
     Row(verticalAlignment = Alignment.CenterVertically) {
         Spacer(modifier = Modifier.width(15.dp))
         Text(
@@ -175,30 +168,28 @@ fun NextLesson() {
 @Preview(showBackground = true)
 @Composable
 fun AddLessonBut() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .clickable{}
-            .padding(horizontal = 15.dp)
-            .height(50.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(100.dp))
-            .background(MaterialTheme.colorScheme.tertiary)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    Column (modifier = Modifier.padding(horizontal = 15.dp)) {
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.surface
+            ),
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_plus),
-                tint = MaterialTheme.colorScheme.surface,
                 modifier = Modifier.size(20.dp),
-                contentDescription = "New Lesson"
+                contentDescription = "Plus"
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = "Добавить урок",
                 fontFamily = Roboto,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.surface
+                fontSize = 14.sp
             )
         }
     }
