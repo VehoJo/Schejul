@@ -50,23 +50,20 @@ import com.vehojo.schejul.R
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
 
-@Preview
 @Composable
-fun NewLesson() {
-    SchejulTheme {
-        Column(modifier = Modifier
+fun NewLesson(onNextScreen: () -> Unit) {
+    Column(modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .statusBarsPadding()
             .padding(top = 15.dp)) {
-            AddLesson()
-        }
+            AddLesson(onNextScreen = onNextScreen)
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun AddLesson() {
+fun AddLesson(onNextScreen: () -> Unit) {
+
     var endTime by remember { mutableStateOf(TextFieldValue("")) }
     var startTime by remember { mutableStateOf(TextFieldValue("")) }
     var cabinetNum by remember { mutableStateOf("") }
@@ -75,12 +72,14 @@ fun AddLesson() {
 
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_back),
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(25.dp),
-                contentDescription = "Back icon"
-            )
+            IconButton(onClick = onNextScreen) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_back),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(25.dp),
+                    contentDescription = "Back icon"
+                )
+            }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "Добавить урок",
@@ -104,7 +103,8 @@ fun AddLesson() {
             fontFamily = Roboto,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.clickable { onNextScreen }
         )
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -126,7 +126,7 @@ fun AddLesson() {
                             color = MaterialTheme.colorScheme.onSurface,
                             RoundedCornerShape(12.dp)
                         )
-                        .clickable{expanded = !expanded}
+                        .clickable { expanded = !expanded }
                         .padding(horizontal = 15.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -137,24 +137,30 @@ fun AddLesson() {
                         fontWeight = FontWeight.Normal,
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.secondary
-                    ) }
+                    )
+                }
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(12.dp)),
+                    modifier = Modifier.background(
+                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp)
+                    ),
                     shape = RoundedCornerShape(12.dp),
                     containerColor = MaterialTheme.colorScheme.background,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)
                 ) {
                     numbers.forEach { number ->
                         DropdownMenuItem(
-                            text = { Text(
-                                text = number,
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.secondary
-                            )},
+                            text = {
+                                Text(
+                                    text = number,
+                                    fontFamily = Roboto,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 16.sp,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            },
                             onClick = {
                                 selectedNum = number
                                 expanded = false
@@ -198,7 +204,7 @@ fun AddLesson() {
         Spacer(modifier = Modifier.height(20.dp))
 
         Row {
-            Column {
+            Column() {
                 Text(
                     text = "Начало",
                     fontFamily = Roboto,
@@ -377,7 +383,7 @@ fun AddLesson() {
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = {},
+            onClick = onNextScreen,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 contentColor = MaterialTheme.colorScheme.surface
@@ -395,7 +401,7 @@ fun AddLesson() {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Button(
-            onClick = {},
+            onClick = onNextScreen,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.tertiary
@@ -412,6 +418,18 @@ fun AddLesson() {
             )
         }
         Spacer(modifier = Modifier.navigationBarsPadding().height(20.dp))
+    }
+}
+
+@Preview
+@Composable
+fun NewLessonPreview() {
+    Column(modifier = Modifier
+        .background(MaterialTheme.colorScheme.background)
+        .fillMaxSize()
+        .statusBarsPadding()
+        .padding(top = 15.dp)) {
+        AddLesson(onNextScreen = {})
     }
 }
 

@@ -3,7 +3,8 @@ import androidx.activity.compose.setContent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import com.vehojo.schejul.ui.screens.HomeScreen
+import androidx.navigation.compose.rememberNavController
+import com.vehojo.schejul.navigation.AppNavHost
 import com.vehojo.schejul.ui.theme.SchejulTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +13,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SchejulTheme {
-                HomeScreen()
+                val navController = rememberNavController()
+                AppNavHost(navHostController = navController)
             }
         }
     }

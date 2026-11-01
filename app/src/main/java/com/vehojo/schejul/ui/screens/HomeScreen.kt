@@ -32,42 +32,38 @@ import com.vehojo.schejul.ui.components.NavBar
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
 
-@Preview
 @Composable
-fun HomeScreen() {
-    SchejulTheme {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize()
-        ) {
-            Header()
-            NextLesson()
-            Spacer(modifier = Modifier.height(15.dp))
-            LessonBox(
-                startTime = "08:00",
-                endTime = "08:40",
-                nameLesson = "История",
-                classroomNum = "Кабинет 13",
-                lessonNum = "1",
-                boxCol = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            AddLessonBut()
-            Spacer(modifier = Modifier.height(15.dp))
-            NavBar(
-                homeColor = MaterialTheme.colorScheme.tertiary,
-                newColor = MaterialTheme.colorScheme.secondary,
-                settingsColor = MaterialTheme.colorScheme.secondary,
-                homeFW = FontWeight.SemiBold,
-                newFW = FontWeight.Normal,
-                settingsFW = FontWeight.Normal
-            )
-        }
+fun HomeScreen(onNextScreen: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
+    ) {
+        Header()
+        NextLesson()
+        Spacer(modifier = Modifier.height(15.dp))
+        LessonBox(
+            startTime = "08:00",
+            endTime = "08:40",
+            nameLesson = "История",
+            classroomNum = "Кабинет 13",
+            lessonNum = "1",
+            boxCol = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        AddLessonBut(onNextScreen = onNextScreen)
+        Spacer(modifier = Modifier.height(15.dp))
+        NavBar(
+            homeColor = MaterialTheme.colorScheme.tertiary,
+            newColor = MaterialTheme.colorScheme.secondary,
+            settingsColor = MaterialTheme.colorScheme.secondary,
+            homeFW = FontWeight.SemiBold,
+            newFW = FontWeight.Normal,
+            settingsFW = FontWeight.Normal
+        )
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun NextLesson() {
     Spacer(modifier = Modifier.height(25.dp))
@@ -165,12 +161,11 @@ fun NextLesson() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun AddLessonBut() {
-    Column (modifier = Modifier.padding(horizontal = 15.dp)) {
+fun AddLessonBut(onNextScreen: () -> Unit) {
+    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
         Button(
-            onClick = {},
+            onClick = onNextScreen,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 contentColor = MaterialTheme.colorScheme.surface
@@ -192,5 +187,38 @@ fun AddLessonBut() {
                 fontSize = 14.sp
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
+    ) {
+        Header()
+        NextLesson()
+        Spacer(modifier = Modifier.height(15.dp))
+        LessonBox(
+            startTime = "08:00",
+            endTime = "08:40",
+            nameLesson = "История",
+            classroomNum = "Кабинет 13",
+            lessonNum = "1",
+            boxCol = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        AddLessonBut(onNextScreen = {})
+        Spacer(modifier = Modifier.height(15.dp))
+        NavBar(
+            homeColor = MaterialTheme.colorScheme.tertiary,
+            newColor = MaterialTheme.colorScheme.secondary,
+            settingsColor = MaterialTheme.colorScheme.secondary,
+            homeFW = FontWeight.SemiBold,
+            newFW = FontWeight.Normal,
+            settingsFW = FontWeight.Normal
+        )
     }
 }
