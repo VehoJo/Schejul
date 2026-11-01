@@ -54,6 +54,7 @@ fun HomeScreen(onNextScreen: () -> Unit) {
         AddLessonBut(onNextScreen = onNextScreen)
         Spacer(modifier = Modifier.height(15.dp))
         NavBar(
+            onNextScreen = onNextScreen,
             homeColor = MaterialTheme.colorScheme.tertiary,
             newColor = MaterialTheme.colorScheme.secondary,
             settingsColor = MaterialTheme.colorScheme.secondary,
@@ -213,6 +214,7 @@ fun HomeScreenPreview() {
         AddLessonBut(onNextScreen = {})
         Spacer(modifier = Modifier.height(15.dp))
         NavBar(
+            onNextScreen = {},
             homeColor = MaterialTheme.colorScheme.tertiary,
             newColor = MaterialTheme.colorScheme.secondary,
             settingsColor = MaterialTheme.colorScheme.secondary,

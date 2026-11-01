@@ -88,14 +88,6 @@ fun AddLesson(onNextScreen: () -> Unit) {
                 fontSize = 22.sp,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "Отмена",
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.tertiary
-            )
         }
         Spacer(modifier = Modifier.height(17.5.dp))
         Text(
@@ -103,8 +95,7 @@ fun AddLesson(onNextScreen: () -> Unit) {
             fontFamily = Roboto,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.clickable { onNextScreen }
+            color = MaterialTheme.colorScheme.secondary
         )
         Spacer(modifier = Modifier.height(10.dp))
 

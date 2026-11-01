@@ -95,6 +95,7 @@ fun Header() {
 
 @Composable
 fun NavBar(
+    onNextScreen: () -> Unit,
     homeColor: Color,
     newColor: Color,
     settingsColor: Color,
@@ -132,7 +133,7 @@ fun NavBar(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable {}
+                modifier = Modifier.clickable {onNextScreen()}
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_plus),
@@ -269,6 +270,7 @@ fun LessonBoxPreview() {
 @Composable
 fun NavBarPreview() {
     NavBar(
+        onNextScreen = {},
         homeColor = MaterialTheme.colorScheme.tertiary,
         newColor = MaterialTheme.colorScheme.secondary,
         settingsColor = MaterialTheme.colorScheme.secondary,
