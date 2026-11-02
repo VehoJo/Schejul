@@ -39,56 +39,53 @@ import java.util.Locale
 @Preview(showBackground = true)
 @Composable
 fun Header() {
-    SchejulTheme {
+    val currentDate = remember { LocalDate.now() }
+    val beautifulDate =
+        remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
+    val useDate = currentDate.format(beautifulDate)
 
-        val currentDate = remember { LocalDate.now() }
-        val beautifulDate =
-            remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
-        val useDate = currentDate.format(beautifulDate)
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(start = 20.dp, end = 20.dp, top = 10.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.avatar_schejul_monochrome),
-                tint = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.size(50.dp),
-                contentDescription = "App Icon"
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.avatar_schejul_monochrome),
+            tint = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.size(50.dp),
+            contentDescription = "App Icon"
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Column() {
+            Text(
+                text = "Schejul",
+                fontSize = 22.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
             )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column() {
-                Text(
-                    text = "Schejul",
-                    fontSize = 22.sp,
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    text = "$useDate",
-                    fontSize = 12.sp,
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = {
-                //Open settings
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_settings),
-                    tint = MaterialTheme.colorScheme.secondary,
-                    contentDescription = "Settings",
-                    modifier = Modifier
-                        .size(30.dp)
-                )
-            }
+            Text(
+                text = "$useDate",
+                fontSize = 12.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = {
+            //Open settings
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.icon_settings),
+                tint = MaterialTheme.colorScheme.secondary,
+                contentDescription = "Settings",
+                modifier = Modifier
+                    .size(30.dp)
+            )
         }
     }
 }
@@ -102,80 +99,77 @@ fun NavBar(
     homeFW: FontWeight,
     newFW: FontWeight,
     settingsFW: FontWeight) {
-    SchejulTheme {
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .fillMaxWidth()
-                .height(80.dp)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxWidth()
+            .height(80.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.clickable {}
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable {}
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_home),
-                    tint = homeColor,
-                    modifier = Modifier.size(30.dp),
-                    contentDescription = "Home page"
-                )
-                Text(
-                    text = "Главная",
-                    fontSize = 12.sp,
-                    fontFamily = Roboto,
-                    fontWeight = homeFW,
-                    color = homeColor,
-                )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable {onNextScreen()}
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_plus),
-                    tint = newColor,
-                    modifier = Modifier.size(30.dp),
-                    contentDescription = "New Schedule"
-                )
-                Text(
-                    text = "Добавить",
-                    fontFamily = Roboto,
-                    fontWeight = newFW,
-                    fontSize = 12.sp,
-                    color = newColor,
-                )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable {}
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_settings),
-                    tint = settingsColor,
-                    modifier = Modifier.size(30.dp),
-                    contentDescription = "Settings page"
-                )
-                Text(
-                    text = "Настройки",
-                    fontFamily = Roboto,
-                    fontWeight = settingsFW,
-                    fontSize = 12.sp,
-                    color = settingsColor,
-                )
-            }
+            Icon(
+                painter = painterResource(id = R.drawable.icon_home),
+                tint = homeColor,
+                modifier = Modifier.size(30.dp),
+                contentDescription = "Home page"
+            )
+            Text(
+                text = "Главная",
+                fontSize = 12.sp,
+                fontFamily = Roboto,
+                fontWeight = homeFW,
+                color = homeColor,
+            )
         }
-        Spacer(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .fillMaxWidth()
-                .navigationBarsPadding()
-        )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.clickable { onNextScreen() }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.icon_plus),
+                tint = newColor,
+                modifier = Modifier.size(30.dp),
+                contentDescription = "New Schedule"
+            )
+            Text(
+                text = "Добавить",
+                fontFamily = Roboto,
+                fontWeight = newFW,
+                fontSize = 12.sp,
+                color = newColor,
+            )
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.clickable {}
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.icon_settings),
+                tint = settingsColor,
+                modifier = Modifier.size(30.dp),
+                contentDescription = "Settings page"
+            )
+            Text(
+                text = "Настройки",
+                fontFamily = Roboto,
+                fontWeight = settingsFW,
+                fontSize = 12.sp,
+                color = settingsColor,
+            )
+        }
     }
+    Spacer(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxWidth()
+            .navigationBarsPadding()
+    )
 }
 @Composable
 fun LessonBox(
@@ -186,69 +180,66 @@ fun LessonBox(
     lessonNum: String,
     boxCol: Color
 ) {
-    SchejulTheme {
-        
-        Box(
-            contentAlignment = Alignment.Center,
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .padding(horizontal = 15.dp)
+            .height(55.dp)
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .height(55.dp)
-                .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
+                .padding(start = 10.dp, end = 10.dp)
+                .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
-                    .fillMaxWidth()
-            ) {
-                Column() {
-                    Text(
-                        text = startTime,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = endTime,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                Spacer(modifier = Modifier.width(20.dp))
-                Box(
-                    modifier = Modifier
-                        .size(width = 3.dp, height = 30.dp)
-                        .background(color = boxCol, shape = RoundedCornerShape(2.dp))
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                Column() {
-                    Text(
-                        text = nameLesson,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = classroomNum,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
+            Column() {
                 Text(
-                    text = lessonNum,
+                    text = startTime,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = endTime,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 11.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
+            Spacer(modifier = Modifier.width(20.dp))
+            Box(
+                modifier = Modifier
+                    .size(width = 3.dp, height = 30.dp)
+                    .background(color = boxCol, shape = RoundedCornerShape(2.dp))
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Column() {
+                Text(
+                    text = nameLesson,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = classroomNum,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = lessonNum,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 11.sp,
+                color = MaterialTheme.colorScheme.secondary
+            )
         }
     }
 }

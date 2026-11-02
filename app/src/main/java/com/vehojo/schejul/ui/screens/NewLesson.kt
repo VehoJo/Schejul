@@ -63,11 +63,21 @@ fun NewLesson(onNextScreen: () -> Unit) {
 
 @Composable
 fun AddLesson(onNextScreen: () -> Unit) {
-
+    var expanded by remember { mutableStateOf(false) }
+    var selectedNum by remember { mutableStateOf("21") }
     var endTime by remember { mutableStateOf(TextFieldValue("")) }
     var startTime by remember { mutableStateOf(TextFieldValue("")) }
-    var cabinetNum by remember { mutableStateOf("") }
+    var classroom by remember { mutableStateOf("") }
     var subject by remember { mutableStateOf("") }
+    var makeAttemps by remember { mutableStateOf(false) }
+
+    val isClassroomValid = classroom.length in 0..5
+    val isSelectedNumValid = selectedNum.length == 1
+    val isSubjectNameValid = subject.length in 2..20
+    val isStartTimeValid = startTime.text.length == 5
+    val isEndTimeValid = endTime.text.length == 5
+    val numbers = (0..9).map { it.toString() }
+    val isFormValid = isStartTimeValid && isEndTimeValid && isSubjectNameValid && isClassroomValid
     val context = LocalContext.current
 
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -95,14 +105,12 @@ fun AddLesson(onNextScreen: () -> Unit) {
             fontFamily = Roboto,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.secondary
+            color = if(makeAttemps && !isSelectedNumValid)
+                MaterialTheme.colorScheme.error
+            else
+                MaterialTheme.colorScheme.secondary,
         )
         Spacer(modifier = Modifier.height(10.dp))
-
-        var expanded by remember { mutableStateOf(false) }
-        var selectedNum by remember { mutableStateOf("1") }
-
-        val numbers = (1..10).map { it.toString() }
 
         Column {
             Box {
@@ -114,7 +122,10 @@ fun AddLesson(onNextScreen: () -> Unit) {
                         .background(MaterialTheme.colorScheme.background)
                         .border(
                             1.dp,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = if(makeAttemps && !isSelectedNumValid)
+                                MaterialTheme.colorScheme.error
+                            else
+                                MaterialTheme.colorScheme.onSurface,
                             RoundedCornerShape(12.dp)
                         )
                         .clickable { expanded = !expanded }
@@ -169,17 +180,22 @@ fun AddLesson(onNextScreen: () -> Unit) {
             fontFamily = Roboto,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.secondary
+            color = if(makeAttemps && !isSubjectNameValid)
+                MaterialTheme.colorScheme.error
+            else
+                MaterialTheme.colorScheme.secondary,
         )
         Spacer(modifier = Modifier.height(5.dp))
         OutlinedTextField(
             value = subject,
             singleLine = true,
+            isError = makeAttemps && !isSubjectNameValid,
             onValueChange = { subject = it },
             shape = RoundedCornerShape(12.dp),
             placeholder = { Text("Название предмета") },
             modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = OutlinedTextFieldDefaults.colors(
+                errorTextColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                 focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
@@ -201,12 +217,16 @@ fun AddLesson(onNextScreen: () -> Unit) {
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Medium,
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = if(makeAttemps && !isStartTimeValid)
+                        MaterialTheme.colorScheme.error
+                    else
+                        MaterialTheme.colorScheme.secondary,
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 OutlinedTextField(
                     value = startTime,
                     singleLine = true,
+                    isError = makeAttemps && !isStartTimeValid,
                     onValueChange = { input ->
                         val digits = input.text.filter { it.isDigit() }.take(4)
 
@@ -235,6 +255,7 @@ fun AddLesson(onNextScreen: () -> Unit) {
                     placeholder = { Text("ЧЧ:ММ") },
                     modifier = Modifier.width(170.dp).height(56.dp),
                     colors = OutlinedTextFieldDefaults.colors(
+                        errorTextColor = MaterialTheme.colorScheme.secondary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                         focusedTextColor = MaterialTheme.colorScheme.primary,
@@ -274,12 +295,16 @@ fun AddLesson(onNextScreen: () -> Unit) {
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Medium,
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = if(makeAttemps && !isEndTimeValid)
+                        MaterialTheme.colorScheme.error
+                    else
+                        MaterialTheme.colorScheme.secondary,
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 OutlinedTextField(
                     value = endTime,
                     singleLine = true,
+                    isError = makeAttemps && !isEndTimeValid,
                     onValueChange = { input ->
                         val digits = input.text.filter { it.isDigit() }.take(4)
 
@@ -308,6 +333,7 @@ fun AddLesson(onNextScreen: () -> Unit) {
                     placeholder = { Text("ЧЧ:ММ") },
                     modifier = Modifier.width(170.dp).height(56.dp),
                     colors = OutlinedTextFieldDefaults.colors(
+                        errorTextColor = MaterialTheme.colorScheme.secondary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                         focusedTextColor = MaterialTheme.colorScheme.primary,
@@ -349,18 +375,22 @@ fun AddLesson(onNextScreen: () -> Unit) {
             fontFamily = Roboto,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.secondary
+            color = if(makeAttemps && !isClassroomValid)
+                MaterialTheme.colorScheme.error
+            else
+                MaterialTheme.colorScheme.secondary,
         )
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(
-            value = cabinetNum,
+            value = classroom,
             singleLine = true,
-            onValueChange = { cabinetNum = it },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = makeAttemps && !isClassroomValid,
+            onValueChange = { classroom = it },
             shape = RoundedCornerShape(12.dp),
             placeholder = { Text("Номер кабинета") },
             modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = OutlinedTextFieldDefaults.colors(
+                errorTextColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSurface,
                 focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
@@ -374,7 +404,12 @@ fun AddLesson(onNextScreen: () -> Unit) {
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = onNextScreen,
+            onClick = {
+                makeAttemps = true
+                if(isFormValid) {
+                    onNextScreen()
+                }
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 contentColor = MaterialTheme.colorScheme.surface
