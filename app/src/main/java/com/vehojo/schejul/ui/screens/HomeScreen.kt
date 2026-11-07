@@ -1,6 +1,7 @@
 package com.vehojo.schejul.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,25 +57,38 @@ fun HomeScreen(
     var lessonDelete by remember {
         mutableStateOf<Lesson?>(null)
     }
+    var now by remember{ mutableStateOf(LocalTime.now()) }
     var showConfirmDelete by remember { mutableStateOf(false) }
     val sortedLesson = lessons.sortedBy { it.selectedNum }
+    val currentLesson = lessons.firstOrNull { lesson ->
+        val start = LocalTime.parse(lesson.startTime)
+        val end = LocalTime.parse(lesson.endTime)
+        lesson.date == LocalDate.now().toString() && now >= start && now < end
+    }
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
     ) {
         Header()
-        NextLesson(lessons = lessons)
+        NextLesson(
+            lessons = lessons
+        )
         Spacer(modifier = Modifier.height(15.dp))
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(sortedLesson) { lesson ->
+                var currentLessonHS = lesson.id == currentLesson?.id
                 LessonBox(
                     startTime = lesson.startTime,
                     endTime = lesson.endTime,
                     nameLesson = lesson.name,
                     classroomNum = "Кабинет: ${lesson.classroom}",
                     lessonNum = lesson.selectedNum.toString(),
-                    boxCol = MaterialTheme.colorScheme.onSurface,
+                    boxCol = if (currentLessonHS) {
+                        MaterialTheme.colorScheme.tertiary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
                     onDelete = {onDeleteLesson(lesson)},
                     showConfirmDelete = showConfirmDelete,
                     onShowConfirmDelete = {
@@ -98,13 +112,25 @@ fun HomeScreen(
     }
 
     if (showConfirmDelete) {
-        Box(modifier = Modifier.fillMaxSize().background(Color(0x99000000)),
+        Box(modifier = Modifier.fillMaxSize()
+            .background(Color(0x99000000))
+            .clickable(
+                interactionSource = null,
+                indication = null
+            ){
+                showConfirmDelete = false
+                lessonDelete = null
+            },
             contentAlignment = Alignment.Center) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)
+                    .clickable(
+                        interactionSource = null,
+                    indication = null
+                    ) {}
             ) {
                 Column(
                     modifier = Modifier
@@ -133,7 +159,10 @@ fun HomeScreen(
                     Row {
                         Spacer(modifier = Modifier.weight(1f))
                         Button(
-                            onClick = {showConfirmDelete = false},
+                            onClick = {
+                                showConfirmDelete = false
+                                lessonDelete = null
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.background,
                                 contentColor = MaterialTheme.colorScheme.secondary
@@ -151,7 +180,6 @@ fun HomeScreen(
                             onClick = {lessonDelete?.let { lesson ->
                                 onDeleteLesson(lesson)
                             }
-
                                 lessonDelete = null
                                 showConfirmDelete = false},
                             colors = ButtonDefaults.buttonColors(
@@ -177,17 +205,14 @@ fun HomeScreen(
 @Composable
 fun NextLesson(lessons: List<Lesson>) {
     val today = LocalDate.now().toString()
+    val todayExam = lessons.filter {it.date == today}
+    val lessonCount = todayExam.size
     var now by remember{ mutableStateOf(LocalTime.now()) }
+    val lessonLastEnd = todayExam.maxByOrNull { LocalTime.parse(it.endTime) }?.endTime
     val currentLesson = lessons.firstOrNull { lesson ->
         val start = LocalTime.parse(lesson.startTime)
         val end = LocalTime.parse(lesson.endTime)
         now >= start && now < end
-    }
-    LaunchedEffect(Unit) {
-        while (true) {
-            now = LocalTime.now()
-            delay(1_000L)
-        }
     }
     val nextLesson = lessons
         .filter { it.date == today }
@@ -197,6 +222,19 @@ fun NextLesson(lessons: List<Lesson>) {
         Duration.between(
             now, LocalTime.parse(lesson.startTime)
         ).toMinutes()
+    }
+    val lessonDesc = when {
+        lessonCount % 100 in 11..14 -> "уроков"
+        lessonCount % 10 == 1 -> "урок"
+        lessonCount % 100 in 2..4 -> "урока"
+        else -> "уроков"
+    }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = LocalTime.now()
+            delay(1_000L)
+        }
     }
 
     Spacer(modifier = Modifier.height(25.dp))
@@ -275,8 +313,7 @@ fun NextLesson(lessons: List<Lesson>) {
         }
     }
     Spacer(modifier = Modifier.height(25.dp))
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Spacer(modifier = Modifier.width(15.dp))
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
             text = "Сегодня",
             fontFamily = Roboto,
@@ -286,7 +323,11 @@ fun NextLesson(lessons: List<Lesson>) {
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "1 уроков · до 8:40",
+            text = if (lessonCount == 0) {
+                "Нет уроков"
+            } else {
+                "$lessonCount $lessonDesc до $lessonLastEnd"
+            },
             fontFamily = Roboto,
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
