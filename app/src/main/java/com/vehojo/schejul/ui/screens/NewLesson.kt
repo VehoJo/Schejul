@@ -1,11 +1,13 @@
 package com.vehojo.schejul.ui.screens
 
+import android.R.attr.shape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
+import com.vehojo.schejul.Lesson
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.border
@@ -49,20 +51,32 @@ import androidx.compose.ui.unit.sp
 import com.vehojo.schejul.R
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
+import java.lang.System
+import java.time.LocalDate
+import java.time.LocalTime
+import kotlin.Long
 
 @Composable
-fun NewLesson(onNextScreen: () -> Unit) {
+fun NewLesson(onNextScreen: () -> Unit, onSaveLesson: (Lesson) -> Unit) {
     Column(modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .statusBarsPadding()
             .padding(top = 15.dp)) {
-            AddLesson(onNextScreen = onNextScreen)
+            AddLesson(onNextScreen = onNextScreen, onSaveLesson = onSaveLesson)
     }
 }
 
+fun isValidTime(time: String): Boolean {
+    val digits = time.filter { it.isDigit() }
+    if (digits.length != 4) return false
+    val hours = digits.substring(0, 2).toInt()
+    val minutes = digits.substring(2, 4).toInt()
+    return hours in 0..23 && minutes in 0..59
+}
+
 @Composable
-fun AddLesson(onNextScreen: () -> Unit) {
+fun AddLesson(onNextScreen: () -> Unit, onSaveLesson: (Lesson) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var selectedNum by remember { mutableStateOf("21") }
     var endTime by remember { mutableStateOf(TextFieldValue("")) }
@@ -74,10 +88,11 @@ fun AddLesson(onNextScreen: () -> Unit) {
     val isClassroomValid = classroom.length in 0..5
     val isSelectedNumValid = selectedNum.length == 1
     val isSubjectNameValid = subject.length in 2..20
-    val isStartTimeValid = startTime.text.length == 5
-    val isEndTimeValid = endTime.text.length == 5
+    val isStartTimeValid = isValidTime(startTime.text)
+    val isEndTimeValid = isValidTime(endTime.text)
+    val isEndTimeMStart = runCatching { LocalTime.parse(endTime.text) > LocalTime.parse(startTime.text) }.getOrDefault(false)
     val numbers = (0..9).map { it.toString() }
-    val isFormValid = isStartTimeValid && isEndTimeValid && isSubjectNameValid && isClassroomValid
+    val isFormValid = isStartTimeValid && isEndTimeValid && isSubjectNameValid && isClassroomValid && isEndTimeMStart
     val context = LocalContext.current
 
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -270,6 +285,7 @@ fun AddLesson(onNextScreen: () -> Unit) {
                         IconButton(onClick = {
                             TimePickerDialog(
                                 context,
+                                R.style.SchejulTimePicker,
                                 { _, hour, minute ->
                                     startTime = TextFieldValue("%02d:%02d".format(hour, minute))
                                 },
@@ -304,7 +320,7 @@ fun AddLesson(onNextScreen: () -> Unit) {
                 OutlinedTextField(
                     value = endTime,
                     singleLine = true,
-                    isError = makeAttemps && !isEndTimeValid,
+                    isError = (makeAttemps && !isEndTimeValid) || (makeAttemps && !isEndTimeMStart),
                     onValueChange = { input ->
                         val digits = input.text.filter { it.isDigit() }.take(4)
 
@@ -408,6 +424,15 @@ fun AddLesson(onNextScreen: () -> Unit) {
                 makeAttemps = true
                 if(isFormValid) {
                     onNextScreen()
+                    val lesson = Lesson(
+                    selectedNum = selectedNum.toInt(),
+                    date = LocalDate.now().toString(),
+                    startTime = startTime.text,
+                    endTime = endTime.text,
+                    name = subject,
+                    classroom = classroom
+                    )
+                    onSaveLesson(lesson)
                 }
             },
             colors = ButtonDefaults.buttonColors(
@@ -455,7 +480,7 @@ fun NewLessonPreview() {
         .fillMaxSize()
         .statusBarsPadding()
         .padding(top = 15.dp)) {
-        AddLesson(onNextScreen = {})
+        AddLesson(onNextScreen = {}, onSaveLesson = {})
     }
 }
 

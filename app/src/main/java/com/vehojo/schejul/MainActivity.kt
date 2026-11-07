@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.vehojo.schejul.navigation.AppNavHost
 import com.vehojo.schejul.ui.theme.SchejulTheme
@@ -23,7 +24,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    AppNavHost(navHostController = navController)
+                    val lessonViewModel: LessonViewModel = viewModel()
+                    AppNavHost(
+                        lessonViewModel = lessonViewModel,
+                        navHostController = navController
+                    )
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.vehojo.schejul.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -17,40 +20,70 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.vehojo.schejul.Lesson
 import com.vehojo.schejul.R
 import com.vehojo.schejul.ui.components.Header
 import com.vehojo.schejul.ui.components.LessonBox
 import com.vehojo.schejul.ui.components.NavBar
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
+import kotlinx.coroutines.delay
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
-fun HomeScreen(onNextScreen: () -> Unit) {
+fun HomeScreen(
+    onNextScreen: () -> Unit,
+    onDeleteLesson: (Lesson) -> Unit,
+    lessons: List<Lesson>,
+) {
+    var lessonDelete by remember {
+        mutableStateOf<Lesson?>(null)
+    }
+    var showConfirmDelete by remember { mutableStateOf(false) }
+    val sortedLesson = lessons.sortedBy { it.selectedNum }
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
     ) {
         Header()
-        NextLesson()
+        NextLesson(lessons = lessons)
         Spacer(modifier = Modifier.height(15.dp))
-        LessonBox(
-            startTime = "08:00",
-            endTime = "08:40",
-            nameLesson = "История",
-            classroomNum = "Кабинет 13",
-            lessonNum = "1",
-            boxCol = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.weight(1f))
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            items(sortedLesson) { lesson ->
+                LessonBox(
+                    startTime = lesson.startTime,
+                    endTime = lesson.endTime,
+                    nameLesson = lesson.name,
+                    classroomNum = "Кабинет: ${lesson.classroom}",
+                    lessonNum = lesson.selectedNum.toString(),
+                    boxCol = MaterialTheme.colorScheme.onSurface,
+                    onDelete = {onDeleteLesson(lesson)},
+                    showConfirmDelete = showConfirmDelete,
+                    onShowConfirmDelete = {
+                        lessonDelete = lesson
+                        showConfirmDelete = true}
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+            }
+        }
         AddLessonBut(onNextScreen = onNextScreen)
         Spacer(modifier = Modifier.height(15.dp))
         NavBar(
@@ -63,10 +96,109 @@ fun HomeScreen(onNextScreen: () -> Unit) {
             settingsFW = FontWeight.Normal
         )
     }
+
+    if (showConfirmDelete) {
+        Box(modifier = Modifier.fillMaxSize().background(Color(0x99000000)),
+            contentAlignment = Alignment.Center) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(28.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "Удалить урок?",
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 24.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Вы точно хотите удалить урок?",
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(
+                            onClick = {showConfirmDelete = false},
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.secondary
+                            ),
+                        ) {
+                            Text(
+                                text = "Отмена",
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(
+                            onClick = {lessonDelete?.let { lesson ->
+                                onDeleteLesson(lesson)
+                            }
+
+                                lessonDelete = null
+                                showConfirmDelete = false},
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.background
+                            ),
+                        ) {
+                            Text(
+                                text = "Удалить",
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
+        }
+    }
 }
 
 @Composable
-fun NextLesson() {
+fun NextLesson(lessons: List<Lesson>) {
+    val today = LocalDate.now().toString()
+    var now by remember{ mutableStateOf(LocalTime.now()) }
+    val currentLesson = lessons.firstOrNull { lesson ->
+        val start = LocalTime.parse(lesson.startTime)
+        val end = LocalTime.parse(lesson.endTime)
+        now >= start && now < end
+    }
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = LocalTime.now()
+            delay(1_000L)
+        }
+    }
+    val nextLesson = lessons
+        .filter { it.date == today }
+        .filter { LocalTime.parse(it.startTime).isAfter(now) }
+        .minByOrNull { LocalTime.parse(it.startTime) }
+    val minutesToNextLesson = nextLesson?.let { lesson ->
+        Duration.between(
+            now, LocalTime.parse(lesson.startTime)
+        ).toMinutes()
+    }
+
     Spacer(modifier = Modifier.height(25.dp))
     Column(
         modifier = Modifier
@@ -82,7 +214,7 @@ fun NextLesson() {
             Spacer(modifier = Modifier.height(18.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Следующий урок".uppercase(),
+                    text = "текущий урок".uppercase(),
                     fontFamily = Roboto,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 11.sp,
@@ -90,7 +222,9 @@ fun NextLesson() {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "1-й урок · 08:00-08:40",
+                    text = currentLesson?.let { lesson ->
+                        "${lesson.selectedNum}-й урок · ${lesson.startTime}-${lesson.endTime}"
+                    } ?: "Нет урока",
                     fontFamily = Roboto,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 12.sp,
@@ -99,7 +233,7 @@ fun NextLesson() {
             }
             Spacer(modifier = Modifier.height(7.dp))
             Text(
-                text = "История",
+                text = currentLesson?.name ?: "Нет урока",
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,
                 fontSize = 30.sp,
@@ -115,7 +249,7 @@ fun NextLesson() {
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "История",
+                    text = nextLesson?.name ?: "Нет урока",
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
@@ -130,7 +264,7 @@ fun NextLesson() {
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "Через 32 минуты",
+                    text = "Через $minutesToNextLesson мин.",
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
@@ -200,7 +334,7 @@ fun HomeScreenPreview() {
             .fillMaxSize()
     ) {
         Header()
-        NextLesson()
+        NextLesson(lessons = emptyList())
         Spacer(modifier = Modifier.height(15.dp))
         LessonBox(
             startTime = "08:00",
@@ -208,7 +342,10 @@ fun HomeScreenPreview() {
             nameLesson = "История",
             classroomNum = "Кабинет 13",
             lessonNum = "1",
-            boxCol = MaterialTheme.colorScheme.onSurface
+            boxCol = MaterialTheme.colorScheme.onSurface,
+            onDelete = {},
+            showConfirmDelete = false,
+            onShowConfirmDelete = {}
         )
         Spacer(modifier = Modifier.weight(1f))
         AddLessonBut(onNextScreen = {})

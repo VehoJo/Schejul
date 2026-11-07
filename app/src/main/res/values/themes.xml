@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.Schejul" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="SchejulTimePicker" parent="@android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorAccent">#245FD6</item>
+        <item name="android:colorControlActivated">#245FD6</item>
+        <item name="android:textColorPrimary">#182337</item>
+        <item name="android:textColorSecondary">#657187</item>
+        <item name="android:windowBackground">#F5F7FB</item>
+    </style>
 </resources>

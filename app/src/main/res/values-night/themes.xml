@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Schejul" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="SchejulTimePicker" parent="@android:style/Theme.Material.Dialog.Alert">
+        <item name="android:colorAccent">#7A8AA0</item>
+        <item name="android:colorControlActivated">#7A8AA0</item>
+        <item name="android:textColorPrimary">#EDF2FC</item>
+        <item name="android:textColorSecondary">#B5C3DA</item>
+        <item name="android:numbersSelectorColor">#000000</item>
+        <item name="android:windowBackground">#141B26</item>
+    </style>
+
+</resources>

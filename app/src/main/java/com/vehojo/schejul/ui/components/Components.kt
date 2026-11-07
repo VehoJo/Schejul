@@ -2,6 +2,7 @@ package com.vehojo.schejul.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vehojo.schejul.Lesson
 import com.vehojo.schejul.R
 import com.vehojo.schejul.ui.theme.Roboto
 import com.vehojo.schejul.ui.theme.SchejulTheme
@@ -40,8 +45,7 @@ import java.util.Locale
 @Composable
 fun Header() {
     val currentDate = remember { LocalDate.now() }
-    val beautifulDate =
-        remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
+    val beautifulDate = remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
     val useDate = currentDate.format(beautifulDate)
 
     Row(
@@ -178,11 +182,19 @@ fun LessonBox(
     nameLesson: String,
     classroomNum: String,
     lessonNum: String,
-    boxCol: Color
+    boxCol: Color,
+    onDelete: () -> Unit,
+    showConfirmDelete: Boolean,
+    onShowConfirmDelete: () -> Unit
 ) {
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
+            .combinedClickable(
+                onClick = {},
+                onLongClick = {onShowConfirmDelete()}
+            )
             .padding(horizontal = 15.dp)
             .height(55.dp)
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
@@ -216,7 +228,7 @@ fun LessonBox(
                     .background(color = boxCol, shape = RoundedCornerShape(2.dp))
             )
             Spacer(modifier = Modifier.width(10.dp))
-            Column() {
+            Column(verticalArrangement = Arrangement.Center) {
                 Text(
                     text = nameLesson,
                     fontFamily = Roboto,
@@ -224,13 +236,15 @@ fun LessonBox(
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Text(
-                    text = classroomNum,
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+                if (classroomNum.isNotBlank()) {
+                    Text(
+                        text = classroomNum,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -253,7 +267,10 @@ fun LessonBoxPreview() {
         nameLesson = "История",
         classroomNum = "Кабинет 13",
         lessonNum = "1",
-        boxCol = MaterialTheme.colorScheme.tertiary
+        boxCol = MaterialTheme.colorScheme.tertiary,
+        onDelete = {},
+        showConfirmDelete = false,
+        onShowConfirmDelete = {}
     )
 }
 
