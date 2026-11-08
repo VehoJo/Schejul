@@ -4,11 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,14 +37,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import com.vehojo.schejul.Lesson
 import com.vehojo.schejul.R
 import com.vehojo.schejul.ui.components.Header
 import com.vehojo.schejul.ui.components.LessonBox
-import com.vehojo.schejul.ui.components.NavBar
 import com.vehojo.schejul.ui.theme.Roboto
-import com.vehojo.schejul.ui.theme.SchejulTheme
 import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.LocalDate
@@ -75,40 +74,37 @@ fun HomeScreen(
             lessons = lessons
         )
         Spacer(modifier = Modifier.height(15.dp))
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(sortedLesson) { lesson ->
-                var currentLessonHS = lesson.id == currentLesson?.id
-                LessonBox(
-                    startTime = lesson.startTime,
-                    endTime = lesson.endTime,
-                    nameLesson = lesson.name,
-                    classroomNum = "Кабинет: ${lesson.classroom}",
-                    lessonNum = lesson.selectedNum.toString(),
-                    boxCol = if (currentLessonHS) {
-                        MaterialTheme.colorScheme.tertiary
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    },
-                    onDelete = {onDeleteLesson(lesson)},
-                    showConfirmDelete = showConfirmDelete,
-                    onShowConfirmDelete = {
-                        lessonDelete = lesson
-                        showConfirmDelete = true}
-                )
-                Spacer(modifier = Modifier.height(15.dp))
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            LazyColumn {
+                items(sortedLesson) { lesson ->
+                    val currentLessonHS = lesson.id == currentLesson?.id
+                    LessonBox(
+                        startTime = lesson.startTime,
+                        endTime = lesson.endTime,
+                        nameLesson = lesson.name,
+                        classroomNum = if (lesson.classroom.isBlank()) {
+                            ""
+                        } else{
+                            "Кабинет: ${lesson.classroom}"
+                        },
+                        lessonNum = lesson.selectedNum.toString(),
+                        boxCol = if (currentLessonHS) {
+                            MaterialTheme.colorScheme.tertiary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
+                        onDelete = { onDeleteLesson(lesson) },
+                        showConfirmDelete = showConfirmDelete,
+                        onShowConfirmDelete = {
+                            lessonDelete = lesson
+                            showConfirmDelete = true
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                }
             }
+            AddLessonBut(onNextScreen = onNextScreen)
         }
-        AddLessonBut(onNextScreen = onNextScreen)
-        Spacer(modifier = Modifier.height(15.dp))
-        NavBar(
-            onNextScreen = onNextScreen,
-            homeColor = MaterialTheme.colorScheme.tertiary,
-            newColor = MaterialTheme.colorScheme.secondary,
-            settingsColor = MaterialTheme.colorScheme.secondary,
-            homeFW = FontWeight.SemiBold,
-            newFW = FontWeight.Normal,
-            settingsFW = FontWeight.Normal
-        )
     }
 
     if (showConfirmDelete) {
@@ -339,29 +335,31 @@ fun NextLesson(lessons: List<Lesson>) {
 
 @Composable
 fun AddLessonBut(onNextScreen: () -> Unit) {
-    Column(modifier = Modifier.padding(horizontal = 15.dp)) {
-        Button(
-            onClick = onNextScreen,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                contentColor = MaterialTheme.colorScheme.surface
-            ),
+    Row {
+        Column(
             modifier = Modifier
-                .height(50.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(end = 20.dp, bottom = 16.dp),
+            horizontalAlignment = Alignment.End
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_plus),
-                modifier = Modifier.size(20.dp),
-                contentDescription = "Plus"
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = "Добавить урок",
-                fontFamily = Roboto,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp
-            )
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = onNextScreen,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.surface
+                ),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
+                    .size(65.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_plus),
+                    modifier = Modifier.size(30.dp),
+                    contentDescription = "Plus"
+                )
+            }
+            Spacer(modifier = Modifier.navigationBarsPadding().height(30.dp))
         }
     }
 }
@@ -388,17 +386,6 @@ fun HomeScreenPreview() {
             showConfirmDelete = false,
             onShowConfirmDelete = {}
         )
-        Spacer(modifier = Modifier.weight(1f))
         AddLessonBut(onNextScreen = {})
-        Spacer(modifier = Modifier.height(15.dp))
-        NavBar(
-            onNextScreen = {},
-            homeColor = MaterialTheme.colorScheme.tertiary,
-            newColor = MaterialTheme.colorScheme.secondary,
-            settingsColor = MaterialTheme.colorScheme.secondary,
-            homeFW = FontWeight.SemiBold,
-            newFW = FontWeight.Normal,
-            settingsFW = FontWeight.Normal
-        )
     }
 }

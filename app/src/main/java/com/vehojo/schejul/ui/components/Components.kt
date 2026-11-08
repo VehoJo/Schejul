@@ -45,7 +45,8 @@ import java.util.Locale
 @Composable
 fun Header() {
     val currentDate = remember { LocalDate.now() }
-    val beautifulDate = remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
+    val beautifulDate =
+        remember { DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.forLanguageTag("ru-RU")) }
     val useDate = currentDate.format(beautifulDate)
 
     Row(
@@ -80,101 +81,9 @@ fun Header() {
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = {
-            //Open settings
-        }) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_settings),
-                tint = MaterialTheme.colorScheme.secondary,
-                contentDescription = "Settings",
-                modifier = Modifier
-                    .size(30.dp)
-            )
-        }
     }
 }
 
-@Composable
-fun NavBar(
-    onNextScreen: () -> Unit,
-    homeColor: Color,
-    newColor: Color,
-    settingsColor: Color,
-    homeFW: FontWeight,
-    newFW: FontWeight,
-    settingsFW: FontWeight) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxWidth()
-            .height(80.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable {}
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_home),
-                tint = homeColor,
-                modifier = Modifier.size(30.dp),
-                contentDescription = "Home page"
-            )
-            Text(
-                text = "Главная",
-                fontSize = 12.sp,
-                fontFamily = Roboto,
-                fontWeight = homeFW,
-                color = homeColor,
-            )
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable { onNextScreen() }
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_plus),
-                tint = newColor,
-                modifier = Modifier.size(30.dp),
-                contentDescription = "New Schedule"
-            )
-            Text(
-                text = "Добавить",
-                fontFamily = Roboto,
-                fontWeight = newFW,
-                fontSize = 12.sp,
-                color = newColor,
-            )
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable {}
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.icon_settings),
-                tint = settingsColor,
-                modifier = Modifier.size(30.dp),
-                contentDescription = "Settings page"
-            )
-            Text(
-                text = "Настройки",
-                fontFamily = Roboto,
-                fontWeight = settingsFW,
-                fontSize = 12.sp,
-                color = settingsColor,
-            )
-        }
-    }
-    Spacer(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxWidth()
-            .navigationBarsPadding()
-    )
-}
 @Composable
 fun LessonBox(
     startTime: String,
@@ -271,19 +180,5 @@ fun LessonBoxPreview() {
         onDelete = {},
         showConfirmDelete = false,
         onShowConfirmDelete = {}
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NavBarPreview() {
-    NavBar(
-        onNextScreen = {},
-        homeColor = MaterialTheme.colorScheme.tertiary,
-        newColor = MaterialTheme.colorScheme.secondary,
-        settingsColor = MaterialTheme.colorScheme.secondary,
-        homeFW = FontWeight.SemiBold,
-        newFW = FontWeight.Normal,
-        settingsFW = FontWeight.Normal
     )
 }
